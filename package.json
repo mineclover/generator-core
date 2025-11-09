@@ -10,8 +10,12 @@
   },
   "license": "MIT",
   "readmeFilename": "README.md",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
-    "test": "mocha test/test-*.js"
+    "test": "mocha test/test-*.js",
+    "lint": "jshint *.js lib/**/*.js test/**/*.js"
   },
   "dependencies": {
     "yargs": "^17.7.2",
