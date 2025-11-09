@@ -14,7 +14,7 @@
     "test": "node node_modules/.bin/nodeunit test"
   },
   "dependencies": {
-    "optimist": "^0.6.1",
+    "yargs": "^17.7.2",
     "q": "~1.5.1",
     "semver": "^5.7.2",
     "ws": "^7.5.10"
@@ -23,8 +23,6 @@
     "grunt": "^1.6.1",
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-contrib-nodeunit": "^5.0.0",
-    "grunt-jscs": "^3.0.1",
-    "jscs-trailing-whitespace-in-source": "0.0.1",
     "nodeunit": "^0.11.3"
   }
 }
