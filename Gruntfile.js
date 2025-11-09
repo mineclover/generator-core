@@ -50,16 +50,21 @@ module.exports = function (grunt) {
             ]
         },
 
-        nodeunit : {
-            all : ["test/test-*.js"]
+        mochaTest : {
+            test: {
+                options: {
+                    reporter: 'spec'
+                },
+                src: ['test/test-*.js']
+            }
         }
 
     });
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
-    grunt.loadNpmTasks("grunt-contrib-nodeunit");
+    grunt.loadNpmTasks("grunt-mocha-test");
 
-    grunt.registerTask("test", ["jshint", "nodeunit"]);
+    grunt.registerTask("test", ["jshint", "mochaTest"]);
 
     grunt.registerTask("default", ["test"]);
 

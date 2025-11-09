@@ -11,7 +11,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "scripts": {
-    "test": "node node_modules/.bin/nodeunit test"
+    "test": "mocha test/test-*.js"
   },
   "dependencies": {
     "yargs": "^17.7.2",
@@ -22,7 +22,8 @@
   "devDependencies": {
     "grunt": "^1.6.1",
     "grunt-contrib-jshint": "^3.2.0",
-    "grunt-contrib-nodeunit": "^5.0.0",
-    "nodeunit": "^0.11.3"
+    "grunt-mocha-test": "^0.13.3",
+    "mocha": "^10.8.2",
+    "chai": "^4.5.0"
   }
 }
