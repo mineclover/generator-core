@@ -46,33 +46,25 @@ module.exports = function (grunt) {
             ],
             json : [
                 "package.json",
-                ".jshintrc",
-                ".jscsrc"
+                ".jshintrc"
             ]
         },
-        
-        jscs: {
-            js: "<%= jshint.js %>",
-            jsx: [
-                "<%= jshint.jsx %>",
-                "!lib/jsx/getLayerSVG.jsx"
-            ],
-            options: {
-                config: ".jscsrc"
+
+        mochaTest : {
+            test: {
+                options: {
+                    reporter: "spec"
+                },
+                src: ["test/test-*.js"]
             }
-        },
-        
-        nodeunit : {
-            all : ["test/test-*.js"]
         }
 
     });
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
-    grunt.loadNpmTasks("grunt-jscs");
-    grunt.loadNpmTasks("grunt-contrib-nodeunit");
+    grunt.loadNpmTasks("grunt-mocha-test");
 
-    grunt.registerTask("test", ["jshint", "jscs", "nodeunit"]);
+    grunt.registerTask("test", ["jshint", "mochaTest"]);
 
     grunt.registerTask("default", ["test"]);
 

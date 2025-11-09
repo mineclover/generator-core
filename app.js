@@ -43,7 +43,7 @@
     var fs = require("fs"),
         resolve = require("path").resolve,
         util = require("util"),
-        optimist = require("optimist"),
+        yargs = require("yargs"),
         Q = require("q"),
         config = require("./lib/config").getConfig(),
         generator = require("./lib/generator"),
@@ -69,7 +69,7 @@
         utils.filterWriteStream(process.stderr, utils.replaceBullet);
     }
 
-    var optionParser = optimist["default"]({
+    var optionParser = yargs.defaults({
         "p" : 49494,
         "h" : "127.0.0.1",
         "P" : "password",
@@ -111,7 +111,7 @@
         .argv;
 
     if (argv.help) {
-        console.log(optimist.help());
+        console.log(optionParser.help());
         process.exit(0);
     }
 
