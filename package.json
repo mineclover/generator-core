@@ -4,6 +4,31 @@
   "photoshop-version": ">=20.0",
   "description": "Adobe Photoshop Generator Core",
   "main": "app.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./app.js"
+    },
+    "./lib/generator": {
+      "import": "./esm/index.js",
+      "require": "./lib/generator.js"
+    },
+    "./lib/generator.js": {
+      "import": "./esm/index.js",
+      "require": "./lib/generator.js"
+    },
+    "./lib/logging": {
+      "import": "./esm/index.js",
+      "require": "./lib/logging.js"
+    },
+    "./lib/logging.js": {
+      "import": "./esm/index.js",
+      "require": "./lib/logging.js"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/adobe-photoshop/generator-core.git"
