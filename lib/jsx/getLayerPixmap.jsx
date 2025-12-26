@@ -26,7 +26,7 @@
 //         what is usually desired. (Default: false)
 //   - useICCProfile: String with the ICC color profile to use. If set this overrides
 //         the convertToWorkingRGBProfile flag. A common value is "sRGB IEC61966-2.1". (Default: "")
-//   - getICCProfileData: If true then the final ICC profile for the image is included 
+//   - getICCProfileData: If true then the final ICC profile for the image is included
 //         along with the returned pixamp (added after PS 16.1)
 //   - allowDither: controls whether any dithering could possibly happen in the color conversion
 //         to 8-bit RGB. If false, then dithering will definitely not occur, regardless of either
@@ -52,204 +52,205 @@
 //   - clipBounds: crops retuned pixels to the given bounds
 //   - usePSClipping: if present use clipBounds to clip image
 //   - compId: number, layer comp ID (optionally and exclusive of compIndex)
-//   - compIndex: number, layer comp index (optionally and exclusive of compId) 
+//   - compIndex: number, layer comp index (optionally and exclusive of compId)
 //   - maxDimension: number, maximal dimension of pixmap in pixels
 
-var DEFAULT_MAX_DIMENSION = 10000;
+var DEFAULT_MAX_DIMENSION = 10000
 
 var actionDescriptor = new ActionDescriptor(),
-    transform = null;
+  transform = null
 
 // Add a transform if necessary
 if (params.inputRect && params.outputRect) {
-    transform = new ActionDescriptor();
+  transform = new ActionDescriptor()
 
-    // The part of the document to use
-    var inputRect   = params.inputRect,
-        psInputRect = new ActionList();
+  // The part of the document to use
+  var inputRect = params.inputRect,
+    psInputRect = new ActionList()
 
-    psInputRect.putUnitDouble(charIDToTypeID("#Pxl"), inputRect.left);
-    psInputRect.putUnitDouble(charIDToTypeID("#Pxl"), inputRect.top);
-    
-    psInputRect.putUnitDouble(charIDToTypeID("#Pxl"), inputRect.right);
-    psInputRect.putUnitDouble(charIDToTypeID("#Pxl"), inputRect.bottom);
+  psInputRect.putUnitDouble(charIDToTypeID('#Pxl'), inputRect.left)
+  psInputRect.putUnitDouble(charIDToTypeID('#Pxl'), inputRect.top)
 
-    transform.putList(stringIDToTypeID("rectangle"), psInputRect);
+  psInputRect.putUnitDouble(charIDToTypeID('#Pxl'), inputRect.right)
+  psInputRect.putUnitDouble(charIDToTypeID('#Pxl'), inputRect.bottom)
 
-    // Where to move the four corners
-    var outputRect      = params.outputRect,
-        psOutputCorners = new ActionList();
+  transform.putList(stringIDToTypeID('rectangle'), psInputRect)
 
-    psOutputCorners.putUnitDouble(charIDToTypeID("#Pxl"), outputRect.left);
-    psOutputCorners.putUnitDouble(charIDToTypeID("#Pxl"), outputRect.top);
-    
-    psOutputCorners.putUnitDouble(charIDToTypeID("#Pxl"), outputRect.right);
-    psOutputCorners.putUnitDouble(charIDToTypeID("#Pxl"), outputRect.top);
-    
-    psOutputCorners.putUnitDouble(charIDToTypeID("#Pxl"), outputRect.right);
-    psOutputCorners.putUnitDouble(charIDToTypeID("#Pxl"), outputRect.bottom);
-    
-    psOutputCorners.putUnitDouble(charIDToTypeID("#Pxl"), outputRect.left);
-    psOutputCorners.putUnitDouble(charIDToTypeID("#Pxl"), outputRect.bottom);
+  // Where to move the four corners
+  var outputRect = params.outputRect,
+    psOutputCorners = new ActionList()
 
-    transform.putList(stringIDToTypeID("quadrilateral"), psOutputCorners);
+  psOutputCorners.putUnitDouble(charIDToTypeID('#Pxl'), outputRect.left)
+  psOutputCorners.putUnitDouble(charIDToTypeID('#Pxl'), outputRect.top)
 
-    // Absolute scaling may not keep the aspect ratio intact, in which case effects
-    // cannot be scaled. To be consistent, turn it off for all of absolute scaling
-    // transform.putBoolean(stringIDToTypeID("scaleStyles"), false);
+  psOutputCorners.putUnitDouble(charIDToTypeID('#Pxl'), outputRect.right)
+  psOutputCorners.putUnitDouble(charIDToTypeID('#Pxl'), outputRect.top)
 
+  psOutputCorners.putUnitDouble(charIDToTypeID('#Pxl'), outputRect.right)
+  psOutputCorners.putUnitDouble(charIDToTypeID('#Pxl'), outputRect.bottom)
+
+  psOutputCorners.putUnitDouble(charIDToTypeID('#Pxl'), outputRect.left)
+  psOutputCorners.putUnitDouble(charIDToTypeID('#Pxl'), outputRect.bottom)
+
+  transform.putList(stringIDToTypeID('quadrilateral'), psOutputCorners)
+
+  // Absolute scaling may not keep the aspect ratio intact, in which case effects
+  // cannot be scaled. To be consistent, turn it off for all of absolute scaling
+  // transform.putBoolean(stringIDToTypeID("scaleStyles"), false);
 } else if (params.scaleX && params.scaleY && (params.scaleX !== 1 || params.scaleY !== 1)) {
-    transform = new ActionDescriptor();
+  transform = new ActionDescriptor()
 
-    if (!params.useSmartScaling) {
-        transform.putBoolean(stringIDToTypeID("forceDumbScaling"), true);
-    }
+  if (!params.useSmartScaling) {
+    transform.putBoolean(stringIDToTypeID('forceDumbScaling'), true)
+  }
 
-    transform.putDouble(charIDToTypeID("Wdth"), params.scaleX * 100);
-    transform.putDouble(charIDToTypeID("Hght"), params.scaleY * 100);
+  transform.putDouble(charIDToTypeID('Wdth'), params.scaleX * 100)
+  transform.putDouble(charIDToTypeID('Hght'), params.scaleY * 100)
 }
 
 if (transform) {
-    // interpolation and scaling options are only relevant in cases where a transform
-    // is going to happen. So, we only bother to set them if we're actually going
-    // to add a transform descriptor
+  // interpolation and scaling options are only relevant in cases where a transform
+  // is going to happen. So, we only bother to set them if we're actually going
+  // to add a transform descriptor
 
-    if (!params.useSmartScaling) {
-        transform.putBoolean(stringIDToTypeID("forceDumbScaling"), true);
-    }
+  if (!params.useSmartScaling) {
+    transform.putBoolean(stringIDToTypeID('forceDumbScaling'), true)
+  }
 
-    if (params.hasOwnProperty("interpolationType")) {
-        transform.putEnumerated(stringIDToTypeID("interpolation"),
-                                stringIDToTypeID("interpolationType"),
-                                stringIDToTypeID(params.interpolationType));
+  if (Object.hasOwn(params, 'interpolationType')) {
+    transform.putEnumerated(
+      stringIDToTypeID('interpolation'),
+      stringIDToTypeID('interpolationType'),
+      stringIDToTypeID(params.interpolationType),
+    )
 
-        actionDescriptor.putEnumerated(stringIDToTypeID("interpolation"),
-                                stringIDToTypeID("interpolationType"),
-                                stringIDToTypeID(params.interpolationType));
-    }
+    actionDescriptor.putEnumerated(
+      stringIDToTypeID('interpolation'),
+      stringIDToTypeID('interpolationType'),
+      stringIDToTypeID(params.interpolationType),
+    )
+  }
 
-    if (params.hasOwnProperty("forceSmartPSDPixelScaling")) {
-        transform.putBoolean(stringIDToTypeID("forceSmartPSDPixelScaling"), !!params.forceSmartPSDPixelScaling);
-    }
+  if (Object.hasOwn(params, 'forceSmartPSDPixelScaling')) {
+    transform.putBoolean(stringIDToTypeID('forceSmartPSDPixelScaling'), !!params.forceSmartPSDPixelScaling)
+  }
 
-    // actually add the transform descriptor to the main descriptor
-    actionDescriptor.putObject(stringIDToTypeID("transform"), stringIDToTypeID("transform"), transform);
+  // actually add the transform descriptor to the main descriptor
+  actionDescriptor.putObject(stringIDToTypeID('transform'), stringIDToTypeID('transform'), transform)
 }
 
-actionDescriptor.putInteger(stringIDToTypeID("documentID"), params.documentId);
-actionDescriptor.putInteger(stringIDToTypeID("width"), params.maxDimension || DEFAULT_MAX_DIMENSION);
-actionDescriptor.putInteger(stringIDToTypeID("height"), params.maxDimension || DEFAULT_MAX_DIMENSION);
-actionDescriptor.putInteger(stringIDToTypeID("format"), 2);
+actionDescriptor.putInteger(stringIDToTypeID('documentID'), params.documentId)
+actionDescriptor.putInteger(stringIDToTypeID('width'), params.maxDimension || DEFAULT_MAX_DIMENSION)
+actionDescriptor.putInteger(stringIDToTypeID('height'), params.maxDimension || DEFAULT_MAX_DIMENSION)
+actionDescriptor.putInteger(stringIDToTypeID('format'), 2)
 
-if (typeof(params.layerSpec) === "object") {
-    actionDescriptor.putInteger(stringIDToTypeID("firstLayer"), params.layerSpec.firstLayerIndex);
-    actionDescriptor.putInteger(stringIDToTypeID("lastLayer"), params.layerSpec.lastLayerIndex);
-    if (params.layerSpec.hasOwnProperty("hidden") && params.layerSpec.hidden.length > 0) {
-        var i,
-            hiddenIndiciesMap = {},
-            settingsList = new ActionList(),
-            hiddenLayerDesc = new ActionDescriptor(),
-            visibleLayerDesc = new ActionDescriptor(),
-            hiddenLayerSettings = new ActionDescriptor(),
-            lsID = stringIDToTypeID("layerSettings");
+if (typeof params.layerSpec === 'object') {
+  actionDescriptor.putInteger(stringIDToTypeID('firstLayer'), params.layerSpec.firstLayerIndex)
+  actionDescriptor.putInteger(stringIDToTypeID('lastLayer'), params.layerSpec.lastLayerIndex)
+  if (Object.hasOwn(params.layerSpec, 'hidden') && params.layerSpec.hidden.length > 0) {
+    var i,
+      hiddenIndiciesMap = {},
+      settingsList = new ActionList(),
+      hiddenLayerDesc = new ActionDescriptor(),
+      visibleLayerDesc = new ActionDescriptor(),
+      hiddenLayerSettings = new ActionDescriptor(),
+      lsID = stringIDToTypeID('layerSettings')
 
-        hiddenLayerSettings.putBoolean(stringIDToTypeID("enabled"), false);
-        hiddenLayerDesc.putObject(lsID, lsID, hiddenLayerSettings);
+    hiddenLayerSettings.putBoolean(stringIDToTypeID('enabled'), false)
+    hiddenLayerDesc.putObject(lsID, lsID, hiddenLayerSettings)
 
-        // We have to add a descriptor for every layer in order, so first
-        // build a map to make it easier to do this.
-        for (i = 0; i < params.layerSpec.hidden.length; ++i) {
-            hiddenIndiciesMap[params.layerSpec.hidden[i]] = true;
-        }
-
-        // Loop over every layer, and add either a hidden or visible descriptor
-        // based on the map we built.
-        for (i = params.layerSpec.firstLayerIndex; i <= params.layerSpec.lastLayerIndex; ++i) {
-            if (hiddenIndiciesMap[i]) {
-                settingsList.putObject(lsID, hiddenLayerDesc);
-            } else {
-                settingsList.putObject(lsID, visibleLayerDesc);
-            }
-        }
-
-        actionDescriptor.putList(stringIDToTypeID("layerSettings"), settingsList);
+    // We have to add a descriptor for every layer in order, so first
+    // build a map to make it easier to do this.
+    for (i = 0; i < params.layerSpec.hidden.length; ++i) {
+      hiddenIndiciesMap[params.layerSpec.hidden[i]] = true
     }
 
+    // Loop over every layer, and add either a hidden or visible descriptor
+    // based on the map we built.
+    for (i = params.layerSpec.firstLayerIndex; i <= params.layerSpec.lastLayerIndex; ++i) {
+      if (hiddenIndiciesMap[i]) {
+        settingsList.putObject(lsID, hiddenLayerDesc)
+      } else {
+        settingsList.putObject(lsID, visibleLayerDesc)
+      }
+    }
+
+    actionDescriptor.putList(stringIDToTypeID('layerSettings'), settingsList)
+  }
 } else {
-    actionDescriptor.putInteger(stringIDToTypeID("layerID"), params.layerSpec);
+  actionDescriptor.putInteger(stringIDToTypeID('layerID'), params.layerSpec)
 }
 
-if (params.hasOwnProperty("compId")) {
-    actionDescriptor.putInteger(stringIDToTypeID("compID"), params.compId);
-} else if (params.hasOwnProperty("compIndex")) {
-    actionDescriptor.putInteger(stringIDToTypeID("compIndex"), params.compIndex);
+if (Object.hasOwn(params, 'compId')) {
+  actionDescriptor.putInteger(stringIDToTypeID('compID'), params.compId)
+} else if (Object.hasOwn(params, 'compIndex')) {
+  actionDescriptor.putInteger(stringIDToTypeID('compIndex'), params.compIndex)
 }
 
 if (!params.includeAncestorMasks) {
-    actionDescriptor.putEnumerated(
-        stringIDToTypeID("includeAncestors"),
-        stringIDToTypeID("includeLayers"),
-        stringIDToTypeID("includeNone")
-    );
+  actionDescriptor.putEnumerated(
+    stringIDToTypeID('includeAncestors'),
+    stringIDToTypeID('includeLayers'),
+    stringIDToTypeID('includeNone'),
+  )
 } else {
-    actionDescriptor.putEnumerated(
-        stringIDToTypeID("includeAncestors"),
-        stringIDToTypeID("includeLayers"),
-        stringIDToTypeID("includeVisible")
-    );
+  actionDescriptor.putEnumerated(
+    stringIDToTypeID('includeAncestors'),
+    stringIDToTypeID('includeLayers'),
+    stringIDToTypeID('includeVisible'),
+  )
 }
 
 actionDescriptor.putEnumerated(
-    stringIDToTypeID("includeAdjustors"),
-    stringIDToTypeID("includeLayers"),
-    stringIDToTypeID("includeVisible")
-);
+  stringIDToTypeID('includeAdjustors'),
+  stringIDToTypeID('includeLayers'),
+  stringIDToTypeID('includeVisible'),
+)
 
-if (params.hasOwnProperty("convertToWorkingRGBProfile")) {
-    actionDescriptor.putBoolean(stringIDToTypeID("convertToWorkingRGBProfile"), !!params.convertToWorkingRGBProfile);
+if (Object.hasOwn(params, 'convertToWorkingRGBProfile')) {
+  actionDescriptor.putBoolean(stringIDToTypeID('convertToWorkingRGBProfile'), !!params.convertToWorkingRGBProfile)
 }
 
-if (params.hasOwnProperty("useICCProfile")) {
-    actionDescriptor.putString(stringIDToTypeID("useICCProfile"), String(params.useICCProfile));
+if (Object.hasOwn(params, 'useICCProfile')) {
+  actionDescriptor.putString(stringIDToTypeID('useICCProfile'), String(params.useICCProfile))
 }
 
-if (params.hasOwnProperty("getICCProfileData")) {
-    actionDescriptor.putBoolean(stringIDToTypeID("sendThumbnailProfile"), !!params.getICCProfileData);
+if (Object.hasOwn(params, 'getICCProfileData')) {
+  actionDescriptor.putBoolean(stringIDToTypeID('sendThumbnailProfile'), !!params.getICCProfileData)
 }
 
 // NOTE: on the PS side, allowDither and useColorSettingsDither default to "true" if they are
 // not set at all. However, in Generator, the common case will be that we do NOT want to dither,
 // regardless of the settings in PS. So, on the Generator side, we default to false (hence the !! on
 // the params properties).
-actionDescriptor.putBoolean(stringIDToTypeID("allowDither"), !!params.allowDither);
-actionDescriptor.putBoolean(stringIDToTypeID("useColorSettingsDither"), !!params.useColorSettingsDither);
+actionDescriptor.putBoolean(stringIDToTypeID('allowDither'), !!params.allowDither)
+actionDescriptor.putBoolean(stringIDToTypeID('useColorSettingsDither'), !!params.useColorSettingsDither)
 
-if (params.hasOwnProperty("clipToDocumentBounds")) {
-    actionDescriptor.putBoolean(stringIDToTypeID("clipToDocumentBounds"), !!params.clipToDocumentBounds);
+if (Object.hasOwn(params, 'clipToDocumentBounds')) {
+  actionDescriptor.putBoolean(stringIDToTypeID('clipToDocumentBounds'), !!params.clipToDocumentBounds)
 }
 
 if (params.clipBounds && params.usePSClipping) {
+  // The part of the document to use
+  var clipBounds = params.clipBounds,
+    psClipRect = new ActionDescriptor()
 
-    // The part of the document to use
-    var clipBounds = params.clipBounds,
-        psClipRect = new ActionDescriptor();
+  psClipRect.putUnitDouble(stringIDToTypeID('left'), charIDToTypeID('#Pxl'), clipBounds.left)
+  psClipRect.putUnitDouble(stringIDToTypeID('top'), charIDToTypeID('#Pxl'), clipBounds.top)
 
-    psClipRect.putUnitDouble(stringIDToTypeID("left"), charIDToTypeID("#Pxl"), clipBounds.left);
-    psClipRect.putUnitDouble(stringIDToTypeID("top"), charIDToTypeID("#Pxl"), clipBounds.top);
-    
-    psClipRect.putUnitDouble(stringIDToTypeID("right"), charIDToTypeID("#Pxl"), clipBounds.right);
-    psClipRect.putUnitDouble(stringIDToTypeID("bottom"), charIDToTypeID("#Pxl"), clipBounds.bottom);
+  psClipRect.putUnitDouble(stringIDToTypeID('right'), charIDToTypeID('#Pxl'), clipBounds.right)
+  psClipRect.putUnitDouble(stringIDToTypeID('bottom'), charIDToTypeID('#Pxl'), clipBounds.bottom)
 
-    actionDescriptor.putObject(stringIDToTypeID("clipBounds"), stringIDToTypeID("clipBounds"), psClipRect);
+  actionDescriptor.putObject(stringIDToTypeID('clipBounds'), stringIDToTypeID('clipBounds'), psClipRect)
 }
 
 if (params.boundsOnly) {
-    actionDescriptor.putBoolean(stringIDToTypeID("boundsOnly"), params.boundsOnly);
+  actionDescriptor.putBoolean(stringIDToTypeID('boundsOnly'), params.boundsOnly)
 }
-actionDescriptor.putBoolean(stringIDToTypeID("bounds"), params.bounds);
+actionDescriptor.putBoolean(stringIDToTypeID('bounds'), params.bounds)
 //needs to be set explicitly as a boolean
 if (params.thread === true || params.thread === false) {
-    actionDescriptor.putBoolean(stringIDToTypeID("thread"), params.thread);
+  actionDescriptor.putBoolean(stringIDToTypeID('thread'), params.thread)
 }
 
-executeAction(stringIDToTypeID("sendLayerThumbnailToNetworkClient"), actionDescriptor, DialogModes.NO);
+executeAction(stringIDToTypeID('sendLayerThumbnailToNetworkClient'), actionDescriptor, DialogModes.NO)

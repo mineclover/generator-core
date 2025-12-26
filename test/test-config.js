@@ -21,56 +21,54 @@
  *
  */
 
-(function () {
-    "use strict";
+;(() => {
+  var expect = require('chai').expect
+  var merge = require('../lib/config')._merge
 
-    var expect = require("chai").expect;
-    var merge = require("../lib/config")._merge;
+  describe('Config merge', () => {
+    it('should merge into empty object', () => {
+      expect(merge({}, { a: 1 })).to.deep.equal({ a: 1 })
+    })
 
-    describe("Config merge", function () {
-        it("should merge into empty object", function () {
-            expect(merge({}, {a : 1})).to.deep.equal({a : 1});
-        });
+    it('should merge empty into filled object', () => {
+      expect(merge({ a: 1 }, {})).to.deep.equal({ a: 1 })
+    })
 
-        it("should merge empty into filled object", function () {
-            expect(merge({a : 1}, {})).to.deep.equal({a : 1});
-        });
+    it('should merge with overwrite', () => {
+      expect(merge({ a: 1 }, { a: 2 })).to.deep.equal({ a: 2 })
+    })
 
-        it("should merge with overwrite", function () {
-            expect(merge({a : 1}, {a : 2})).to.deep.equal({a : 2});
-        });
+    it('should merge overwrite primitive with object', () => {
+      expect(merge({ a: 1 }, { a: { b: 2 } })).to.deep.equal({ a: { b: 2 } })
+    })
 
-        it("should merge overwrite primitive with object", function () {
-            expect(merge({a : 1}, {a : {b : 2}})).to.deep.equal({a : {b : 2}});
-        });
+    it('should merge overwrite object with primitive', () => {
+      expect(merge({ a: { b: 1 } }, { a: 2 })).to.deep.equal({ a: 2 })
+    })
 
-        it("should merge overwrite object with primitive", function () {
-            expect(merge({a : {b : 1}}, {a : 2})).to.deep.equal({a : 2});
-        });
+    it('should merge recursively', () => {
+      expect(merge({ a: { b: 1 } }, { a: { c: 2 } })).to.deep.equal({ a: { b: 1, c: 2 } })
+    })
 
-        it("should merge recursively", function () {
-            expect(merge({a : {b : 1}}, {a : {c : 2}})).to.deep.equal({a : {b : 1, c : 2}});
-        });
+    it('should merge recursively with overwrite', () => {
+      expect(merge({ a: { b: 1, c: 3 } }, { a: { b: 2, d: 4 } })).to.deep.equal({ a: { b: 2, c: 3, d: 4 } })
+    })
 
-        it("should merge recursively with overwrite", function () {
-            expect(merge({a : {b : 1, c: 3}}, {a : {b : 2, d : 4}})).to.deep.equal({a : {b : 2, c : 3, d : 4}});
-        });
+    it('should not merge into primitive', () => {
+      expect(merge(1, { a: { b: 2, d: 4 } })).to.equal(1)
+    })
 
-        it("should not merge into primitive", function () {
-            expect(merge(1, {a : {b : 2, d : 4}})).to.equal(1);
-        });
+    it('should treat merging in primitive as noop', () => {
+      expect(merge({ a: 1 }, 1)).to.deep.equal({ a: 1 })
+    })
 
-        it("should treat merging in primitive as noop", function () {
-            expect(merge({a : 1}, 1)).to.deep.equal({a : 1});
-        });
+    it('should modify src in place', () => {
+      var a = { a: 1 }
+      var b = { b: 2 }
+      var c = merge(a, b)
 
-        it("should modify src in place", function () {
-            var a = {a : 1};
-            var b = {b : 2};
-            var c = merge(a, b);
-
-            expect(a).to.equal(c);
-            expect(a).to.deep.equal({a : 1, b : 2});
-        });
-    });
-}());
+      expect(a).to.equal(c)
+      expect(a).to.deep.equal({ a: 1, b: 2 })
+    })
+  })
+})()

@@ -2,7 +2,7 @@
  * Type declarations for generator-core ESM exports
  */
 
-import type { EventEmitter } from 'events'
+import type { EventEmitter } from 'node:events'
 
 export interface Pixmap {
   width: number

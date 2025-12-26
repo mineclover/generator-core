@@ -3,10 +3,10 @@
 // Required params: none
 
 var i,
-    ids = [];
+  ids = []
 
 for (i = 0; i < app.documents.length; i++) {
-    ids.push(app.documents[i].id);
+  ids.push(app.documents[i].id)
 }
 
-ids.join(":");
+ids.join(':')

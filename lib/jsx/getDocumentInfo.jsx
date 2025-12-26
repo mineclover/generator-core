@@ -16,25 +16,25 @@
 // Optional params:
 //   - documentId: The ID of the document requested (leave null for current document)
 
-var idNS = stringIDToTypeID("sendDocumentInfoToNetworkClient");
-var desc = new ActionDescriptor();
-desc.putString(stringIDToTypeID("version"), "1.0.1");
+var idNS = stringIDToTypeID('sendDocumentInfoToNetworkClient')
+var desc = new ActionDescriptor()
+desc.putString(stringIDToTypeID('version'), '1.0.1')
 
-var flags = params.flags;
+var flags = params.flags
 
-var k;
+var k
 for (k in flags) {
-    if (flags.hasOwnProperty(k)) {
-        desc.putBoolean(stringIDToTypeID(k), flags[k]);
-    }
+  if (Object.hasOwn(flags, k)) {
+    desc.putBoolean(stringIDToTypeID(k), flags[k])
+  }
 }
 
 if (params.documentId) {
-    desc.putInteger(stringIDToTypeID("documentID"), params.documentId);
+  desc.putInteger(stringIDToTypeID('documentID'), params.documentId)
 }
 
 if (app.documents.length) {
-    executeAction(idNS, desc, DialogModes.NO);
+  executeAction(idNS, desc, DialogModes.NO)
 } else {
-    null; // jshint ignore:line
+  null // jshint ignore:line
 }

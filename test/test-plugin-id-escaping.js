@@ -21,21 +21,19 @@
  *
  */
 
-(function () {
-    "use strict";
+;(() => {
+  var expect = require('chai').expect
+  var generator = require('../lib/generator')
+  var escapePluginId = generator._escapePluginId
+  var unescapePluginId = generator._unescapePluginId
 
-    var expect = require("chai").expect;
-    var generator        = require("../lib/generator");
-    var escapePluginId   = generator._escapePluginId;
-    var unescapePluginId = generator._unescapePluginId;
+  describe('Plugin ID escaping', () => {
+    it('should escape and unescape plugin IDs correctly', () => {
+      var unsafePluginId = 'geneRa_tor-foo.42bar.Baz#bla borg'
+      var safePluginId = 'geneRa_95_tor_45_foo_46_42bar_46_Baz_35_bla_32_borg'
 
-    describe("Plugin ID escaping", function () {
-        it("should escape and unescape plugin IDs correctly", function () {
-            var unsafePluginId = "geneRa_tor-foo.42bar.Baz#bla borg";
-            var safePluginId   = "geneRa_95_tor_45_foo_46_42bar_46_Baz_35_bla_32_borg";
-
-            expect(escapePluginId(unsafePluginId)).to.equal(safePluginId);
-            expect(unescapePluginId(safePluginId)).to.equal(unsafePluginId);
-        });
-    });
-}());
+      expect(escapePluginId(unsafePluginId)).to.equal(safePluginId)
+      expect(unescapePluginId(safePluginId)).to.equal(unsafePluginId)
+    })
+  })
+})()

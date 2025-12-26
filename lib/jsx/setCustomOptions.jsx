@@ -7,9 +7,9 @@
 // Optional param:
 //   - persistent: Boolean that indicates whether the settings should persist across launches
 
-var desc = new ActionDescriptor();
+var desc = new ActionDescriptor()
 
-var settingsKey = app.stringIDToTypeID("settings");
-desc.putString(settingsKey, params.settings);
+var settingsKey = app.stringIDToTypeID('settings')
+desc.putString(settingsKey, params.settings)
 
-app.putCustomOptions(params.key, desc, params.persistent);
+app.putCustomOptions(params.key, desc, params.persistent)

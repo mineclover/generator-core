@@ -6,7 +6,6 @@
   "main": "app.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
-  "type": "module",
   "exports": {
     ".": {
       "import": "./esm/index.js",

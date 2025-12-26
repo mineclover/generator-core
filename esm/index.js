@@ -2,7 +2,8 @@
  * ESM wrapper for generator-core
  */
 
-import { createRequire } from 'module'
+import { createRequire } from 'node:module'
+
 const require = createRequire(import.meta.url)
 
 // Load CommonJS modules
