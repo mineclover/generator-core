@@ -39,7 +39,6 @@
 
   var fs = require('node:fs'),
     resolve = require('node:path').resolve,
-    util = require('node:util'),
     yargs = require('yargs'),
     Q = require('q'),
     config = require('./lib/config').getConfig(),
@@ -213,7 +212,7 @@
       return plugins
     }
 
-    if (!util.isArray(folders)) {
+    if (!Array.isArray(folders)) {
       folders = [folders]
     }
 

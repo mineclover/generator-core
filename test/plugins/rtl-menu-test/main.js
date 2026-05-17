@@ -35,7 +35,7 @@
     // Should appear to the left of the string in the menu
     _generator.addMenuItem(id, rtlStringBang, true, false).then(
       () => {
-        var actualHexString = new Buffer(rtlStringBang).toString('hex')
+        var actualHexString = Buffer.from(rtlStringBang).toString('hex')
         console.log('Created RTL menu')
         console.log(`hex representation of string: ${actualHexString}`)
         console.log(`expected hex string: ${expectedHexString}`)

@@ -42,16 +42,17 @@
     "lint": "jshint *.js lib/**/*.js test/**/*.js"
   },
   "dependencies": {
-    "yargs": "^17.7.2",
     "q": "~1.5.1",
     "semver": "^5.7.2",
-    "ws": "^7.5.10"
+    "ws": "^7.5.10",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "chai": "^4.5.0",
     "grunt": "^1.6.1",
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-mocha-test": "^0.13.3",
-    "mocha": "^10.8.2",
-    "chai": "^4.5.0"
+    "jshint": "^2.13.6",
+    "mocha": "^10.8.2"
   }
 }
